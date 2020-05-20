@@ -13,7 +13,9 @@ reference: https://mp.weixin.qq.com/s/h0N9OR_AcUw_lXgELohS0Q
 
 def triplet_loss(y_true, y_pred):
     """
-    Triplet Loss的损失函数
+    Triplet Loss的损失函数：
+    最小化anchor和positive之间的距离，最大化anchor和negative之间的距离；
+    并且使得锚点a和负样本的距离 > 锚点和正样本的距离 + margin
     """
     anc, pos, neg = y_pred[:, 0:128], y_pred[:, 128:256], y_pred[:, 256:]
     # 欧式距离
@@ -22,5 +24,4 @@ def triplet_loss(y_true, y_pred):
     basic_loss = pos_dist - neg_dist + TripletModel.MARGIN
 
     loss = K.maximum(basic_loss, 0.0)
-    print([INFO] model - triplet_loss shape: %s" % str(loss.shape))
     return loss
